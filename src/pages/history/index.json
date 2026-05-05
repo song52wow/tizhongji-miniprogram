@@ -1,8 +1,5 @@
 {
   "navigationBarTitleText": "体重管理",
   "navigationBarBackgroundColor": "#ffffff",
-  "navigationBarTextStyle": "black",
-  "usingComponents": {
-    "nav-bar": "/components/nav-bar/index"
-  }
+  "navigationBarTextStyle": "black"
 }

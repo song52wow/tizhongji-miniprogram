@@ -20,19 +20,27 @@
     "list": [
       {
         "pagePath": "pages/home/index",
-        "text": "总览"
+        "text": "总览",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-selected.png"
       },
       {
         "pagePath": "pages/record/index",
-        "text": "记录"
+        "text": "记录",
+        "iconPath": "images/record.png",
+        "selectedIconPath": "images/record-selected.png"
       },
       {
         "pagePath": "pages/trend/index",
-        "text": "趋势"
+        "text": "趋势",
+        "iconPath": "images/trend.png",
+        "selectedIconPath": "images/trend-selected.png"
       },
       {
         "pagePath": "pages/history/index",
-        "text": "动态"
+        "text": "动态",
+        "iconPath": "images/history.png",
+        "selectedIconPath": "images/history-selected.png"
       }
     ]
   },

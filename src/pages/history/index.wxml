@@ -74,7 +74,4 @@
       <text class="empty-text">暂无通知</text>
     </view>
   </view>
-
-  <!-- 底部导航 -->
-  <nav-bar currentIndex="{{3}}" />
 </view>

@@ -130,7 +130,4 @@
       <text class="stat-subtext">{{avgDiffSubtext}}</text>
     </view>
   </view>
-
-  <!-- 底部导航 -->
-  <nav-bar currentIndex="{{2}}" />
 </view>
