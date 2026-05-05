@@ -1,0 +1,118 @@
+/* 全局样式 token */
+page {
+  --blue-primary: #106399;
+  --text-dark: #191C1D;
+  --text-muted: #41474F;
+  --text-light: #717880;
+  --bg-gray: #F8FAFC;
+  --bg-gray-deep: #EDEEEF;
+  --border-gray: #E2E8F0;
+  --morning-orange: #FC8A40;
+  --morning-orange-bg: #FFDBC9;
+  --morning-text: #9B4500;
+  --evening-purple: #9984FF;
+  --evening-purple-bg: #E6DEFF;
+  --evening-text: #6042D6;
+  --accent-blue: #2563EB;
+  --nav-gray: #94A3B8;
+  --delete-red: #BA1A1A;
+
+  --card-radius: 12px;
+  --card-radius-large: 20px;
+  --card-radius-small: 8px;
+  --card-gap: 16px;
+  --card-padding: 25px;
+  --page-padding: 20px;
+  --nav-height: 80px;
+  --fab-size: 56px;
+  --fab-radius: 16px;
+
+  background-color: var(--bg-gray);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* 通用卡片样式 */
+.card {
+  background-color: white;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-gray);
+  padding: var(--card-padding);
+  box-shadow: 0 4px 12px rgba(16, 99, 153, 0.08);
+}
+
+/* 底部导航栏 */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid var(--border-gray);
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -4px 6px rgba(90, 155, 213, 0.08);
+}
+
+.nav-bar::before {
+  content: '';
+  display: block;
+  height: env(safe-area-inset-bottom);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.nav-icon {
+  font-size: 18px;
+  color: var(--nav-gray);
+}
+
+.nav-icon.active {
+  color: var(--accent-blue);
+}
+
+.nav-label {
+  font-size: 12px;
+  color: var(--nav-gray);
+}
+
+.nav-label.active {
+  color: var(--accent-blue);
+}
+
+/* 页面内容容器 */
+.page-content {
+  padding: 24px 20px 120px;
+}
+
+/* 悬浮按钮 */
+.fab {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background-color: var(--blue-primary);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.fab-icon {
+  color: white;
+  font-size: 24px;
+}

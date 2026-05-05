@@ -1,0 +1,190 @@
+page {
+  background-color: #F8FAFC;
+}
+
+.page {
+  padding: 24px 20px 120px;
+  min-height: 100vh;
+}
+
+/* 页面标题 */
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-title {
+  display: block;
+  font-size: 32px;
+  font-weight: 500;
+  color: #191C1D;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: rgba(65, 71, 79, 0.8);
+}
+
+/* Tab 切换 */
+.tab-bar {
+  display: flex;
+  background-color: #F8F9FA;
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 999px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.tab-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #41474F;
+}
+
+.tab-btn.active .tab-text {
+  color: #191C1D;
+}
+
+/* Tab 内容 */
+.tab-content {
+  min-height: 200px;
+}
+
+/* 记录列表 */
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.record-item {
+  display: flex;
+  align-items: center;
+  background-color: #F8F9FA;
+  border: 1px solid #E1E3E4;
+  border-radius: 8px;
+  padding: 13px;
+  gap: 24px;
+}
+
+.record-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.record-icon-box.morning {
+  background-color: #FFDBC9;
+}
+
+.record-icon-box.evening {
+  background-color: #E6DEFF;
+}
+
+.record-icon {
+  font-size: 20px;
+}
+
+.record-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.record-date {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #191C1D;
+}
+
+.record-note {
+  display: block;
+  font-size: 12px;
+  color: rgba(65, 71, 79, 0.8);
+  margin-top: 2px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record-weight {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.weight-value {
+  display: block;
+  font-size: 32px;
+  font-weight: 600;
+  color: #191C1D;
+}
+
+.weight-unit {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #41474F;
+}
+
+/* 加载更多 */
+.load-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.load-more-text {
+  font-size: 14px;
+  color: #2563EB;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 0;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  opacity: 0.4;
+}
+
+.empty-text {
+  font-size: 16px;
+  color: rgba(65, 71, 79, 0.8);
+}
+
+/* 加载状态 */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 64px 0;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #94A3B8;
+}

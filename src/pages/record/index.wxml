@@ -1,0 +1,84 @@
+<view class="page">
+  <!-- 页面标题 -->
+  <view class="page-title">记录体重</view>
+
+  <!-- 输入卡片 -->
+  <view class="input-card">
+    <!-- 日期选择 -->
+    <view class="field-section">
+      <text class="field-label">日期</text>
+      <view class="date-picker" bindtap="onDatePickerTap">
+        <text class="date-icon">📅</text>
+        <text class="date-value">{{dateDisplay}}</text>
+        <text class="date-arrow">▼</text>
+      </view>
+    </view>
+
+    <!-- 时段切换 -->
+    <view class="field-section">
+      <text class="field-label">时段</text>
+      <view class="period-toggle">
+        <view
+          class="period-btn morning {{selectedPeriod === 'morning' ? 'active' : ''}}"
+          bindtap="onPeriodChange"
+          data-period="morning"
+        >
+          <text class="period-icon">☀</text>
+          <text class="period-text">早晨</text>
+        </view>
+        <view
+          class="period-btn evening {{selectedPeriod === 'evening' ? 'active' : ''}}"
+          bindtap="onPeriodChange"
+          data-period="evening"
+        >
+          <text class="period-icon">🌙</text>
+          <text class="period-text">晚上</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 体重输入 -->
+    <view class="field-section weight-input-section">
+      <view class="weight-input-box">
+        <input
+          class="weight-input"
+          type="digit"
+          placeholder="0.0"
+          value="{{weightInput}}"
+          bindinput="onWeightInput"
+          confirm-type="done"
+        />
+        <text class="weight-suffix">kg</text>
+      </view>
+      <text wx:if="{{existingRecord}}" class="existing-hint">已有记录，更新将覆盖</text>
+    </view>
+
+    <!-- 备注输入 -->
+    <view class="field-section">
+      <text class="field-label">备注 (选填)</text>
+      <view class="note-box">
+        <textarea
+          class="note-input"
+          placeholder="添加记录备注..."
+          maxlength="200"
+          value="{{noteInput}}"
+          bindinput="onNoteInput"
+        ></textarea>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <text wx:if="{{errorMsg}}" class="error-msg">{{errorMsg}}</text>
+
+  <!-- 保存按钮 -->
+  <view class="save-btn {{saving ? 'saving' : ''}}" bindtap="{{saving ? '' : 'onSaveTap'}}">
+    <text wx:if="{{!saving}}" class="save-btn-icon">✓</text>
+    <text wx:if="{{!saving}}" class="save-btn-text">保存记录</text>
+    <view wx:if="{{saving}}" class="save-loading"></view>
+    <text wx:if="{{saving}}" class="save-btn-text">保存中...</text>
+  </view>
+
+  <!-- 底部导航 -->
+  <nav-bar currentIndex="{{1}}" />
+</view>

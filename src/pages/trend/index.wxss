@@ -1,0 +1,252 @@
+page {
+  background-color: #F8FAFC;
+}
+
+.page {
+  padding: 24px 20px 120px;
+  min-height: 100vh;
+}
+
+/* 页面标题 */
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-title {
+  display: block;
+  font-size: 32px;
+  font-weight: 500;
+  color: #191C1D;
+  letter-spacing: -0.8px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: rgba(65, 71, 79, 0.8);
+  margin-top: 4px;
+}
+
+/* 时间范围筛选 */
+.range-filter {
+  display: flex;
+  background-color: #F8F9FA;
+  border-radius: 999px;
+  padding: 5px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  margin-bottom: 40px;
+}
+
+.range-btn {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 999px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.range-btn.active {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.range-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #41474F;
+}
+
+.range-btn.active .range-text {
+  color: #106399;
+}
+
+/* 趋势图表卡片 */
+.chart-card {
+  background-color: white;
+  border-radius: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(16, 99, 153, 0.08);
+  margin-bottom: 16px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: #191C1D;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.legend-dot.morning {
+  background-color: #FC8A40;
+}
+
+.legend-dot.evening {
+  background-color: #9984FF;
+}
+
+.legend-text {
+  font-size: 12px;
+  color: #41474F;
+}
+
+.chart-body {
+  height: 200px;
+}
+
+.trend-chart {
+  width: 100%;
+  height: 200px;
+}
+
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.empty-text {
+  color: #94A3B8;
+  font-size: 14px;
+}
+
+/* 统计网格 */
+.stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+}
+
+.stats-row .stat-card {
+  flex: 1;
+}
+
+/* 统计卡片 */
+.stat-card {
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(16, 99, 153, 0.04);
+}
+
+.change-card {
+  background-color: rgba(90, 155, 213, 0.06);
+  border-color: rgba(90, 155, 213, 0.12);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.stat-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.morning-bg {
+  background-color: rgba(252, 138, 64, 0.15);
+}
+
+.evening-bg {
+  background-color: rgba(153, 132, 255, 0.15);
+}
+
+.blue-bg {
+  background-color: rgba(16, 99, 153, 0.15);
+}
+
+.gray-bg {
+  background-color: rgba(65, 71, 79, 0.15);
+}
+
+.stat-icon {
+  font-size: 14px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #41474F;
+  letter-spacing: 0.6px;
+}
+
+.blue-label {
+  color: #106399;
+}
+
+.stat-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #191C1D;
+}
+
+.stat-value.large {
+  font-size: 48px;
+  letter-spacing: -0.96px;
+}
+
+.stat-value.medium {
+  font-size: 32px;
+  letter-spacing: -0.64px;
+}
+
+.stat-unit {
+  font-size: 16px;
+  color: #41474F;
+}
+
+.blue-value {
+  color: #106399;
+}
+
+.blue-unit {
+  color: rgba(16, 99, 153, 0.8);
+}
+
+.stat-subtext {
+  display: block;
+  font-size: 12px;
+  color: rgba(65, 71, 79, 0.8);
+  margin-top: 4px;
+}
