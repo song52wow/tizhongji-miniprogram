@@ -47,7 +47,7 @@ Page({
         }),
       ]);
 
-      // 处理图表数据
+      // 处理图表数据 — 保留日期信息用于统一日期轴对齐
       const morningRecs = records
         .filter((r: any) => r.period === 'morning')
         .sort((a: any, b: any) => a.date.localeCompare(b.date));
@@ -57,6 +57,9 @@ Page({
 
       const morningData = morningRecs.map((r: any) => r.weight);
       const eveningData = eveningRecs.map((r: any) => r.weight);
+
+      // 建立统一日期轴
+      const allDates = [...new Set(records.map((r: any) => r.date))].sort() as string[];
 
       // 统计卡片数据
       const fmt = (v: number | null) => v != null ? v.toFixed(1) : '--';
@@ -94,7 +97,7 @@ Page({
 
       // 渲染图表
       setTimeout(() => {
-        this.drawTrendChart(morningData, eveningData);
+        this.drawTrendChart(morningData, eveningData, morningRecs, eveningRecs, allDates);
       }, 100);
 
     } catch (e) {
@@ -145,14 +148,22 @@ Page({
     return `${m}月${d}日`;
   },
 
-  drawTrendChart(morningData: number[], eveningData: number[]) {
+  drawTrendChart(morningData: number[], eveningData: number[], morningRecs: any[], eveningRecs: any[], allDates: string[]) {
+    // 建立统一日期轴对齐数据
+    const alignedMorning: (number | null)[] = allDates.map(
+      d => morningRecs.find((r: any) => r.date === d)?.weight ?? null
+    );
+    const alignedEvening: (number | null)[] = allDates.map(
+      d => eveningRecs.find((r: any) => r.date === d)?.weight ?? null
+    );
+
     if (morningData.length === 0 && eveningData.length === 0) {
       this.setData({ chartReady: true });
       return;
     }
 
-    const allData = [...morningData, ...eveningData];
-    if (allData.length === 0) {
+    const allWeights = [...alignedMorning.filter(v => v !== null) as number[], ...alignedEvening.filter(v => v !== null) as number[]];
+    if (allWeights.length === 0) {
       this.setData({ chartReady: true });
       return;
     }
@@ -181,9 +192,8 @@ Page({
 
       ctx.clearRect(0, 0, width, height);
 
-      const safeData = allData.length > 0 ? allData : [0];
-      const minVal = Math.min(...safeData) - 1;
-      const maxVal = Math.max(...safeData) + 1;
+      const minVal = Math.min(...allWeights) - 1;
+      const maxVal = Math.max(...allWeights) + 1;
       const range = maxVal - minVal || 1;
 
       const padding = 8;
@@ -192,6 +202,7 @@ Page({
       const chartH = height - 32;
       const chartX = padding + labelW;
       const chartY = 10;
+      const n = allDates.length;
 
       // Draw horizontal grid lines and Y-axis labels
       const gridCount = 4;
@@ -218,69 +229,52 @@ Page({
       ctx.font = '9px sans-serif';
       ctx.fillText('kg', padding, chartY + 10);
 
-      const getX = (i: number, total: number) =>
-        chartX + (total <= 1 ? chartW / 2 : (i / (total - 1)) * chartW);
       const getY = (v: number) =>
         chartY + chartH - ((v - minVal) / range) * chartH;
 
-      // Use the date range from records to determine max X points
-      // Collect all dates from morningData and eveningData (they share the same date index)
-      // We align by using the max length between the two series for X positions
-      const maxLen = Math.max(morningData.length, eveningData.length);
+      // 使用统一日期轴计算X坐标
       const getXAligned = (i: number) =>
-        chartX + (maxLen <= 1 ? chartW / 2 : (i / (maxLen - 1)) * chartW);
+        chartX + (n <= 1 ? chartW / 2 : (i / (n - 1)) * chartW);
 
-      const drawLine = (data: number[], color: string, fillAlpha: number) => {
-        if (data.length === 0) return;
-
-        // 区域填充（平滑曲线）
-        ctx.beginPath();
-        ctx.moveTo(getXAligned(0), chartY + chartH);
-        if (data.length === 1) {
-          ctx.lineTo(getXAligned(0), getY(data[0]));
-        } else {
-          for (let i = 0; i < data.length; i++) {
-            const x = getXAligned(i);
-            const y = getY(data[i]);
-            if (i === 0) {
-              ctx.lineTo(x, y);
-            } else {
-              const prevX = getXAligned(i - 1);
-              const prevY = getY(data[i - 1]);
-              ctx.quadraticCurveTo(prevX, prevY, (prevX + x) / 2, (prevY + y) / 2);
-              ctx.quadraticCurveTo(x, y, x, y);
-            }
+      const buildPoints = (data: (number | null)[]) => {
+        const pts: { x: number; y: number }[] = [];
+        for (let i = 0; i < data.length; i++) {
+          if (data[i] !== null) {
+            pts.push({ x: getXAligned(i), y: getY(data[i]!) });
           }
         }
-        ctx.lineTo(getXAligned(data.length - 1), chartY + chartH);
+        return pts;
+      };
+
+      const drawLine = (alignedData: (number | null)[], color: string, fillAlpha: number) => {
+        const points = buildPoints(alignedData);
+        if (points.length === 0) return;
+
+        // 区域填充
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, chartY + chartH);
+        for (const p of points) {
+          ctx.lineTo(p.x, p.y);
+        }
+        ctx.lineTo(points[points.length - 1].x, chartY + chartH);
         ctx.closePath();
         ctx.fillStyle = color + Math.round(fillAlpha * 255).toString(16).padStart(2, '0');
         ctx.fill();
 
-        // 平滑折线
+        // 折线
         ctx.beginPath();
-        if (data.length === 1) {
-          ctx.arc(getXAligned(0), getY(data[0]), 1, 0, Math.PI * 2);
-        } else {
-          ctx.moveTo(getXAligned(0), getY(data[0]));
-          for (let i = 1; i < data.length; i++) {
-            const prevX = getXAligned(i - 1);
-            const prevY = getY(data[i - 1]);
-            const x = getXAligned(i);
-            const y = getY(data[i]);
-            const cpX = (prevX + x) / 2;
-            ctx.quadraticCurveTo(cpX, prevY, cpX, (prevY + y) / 2);
-            ctx.quadraticCurveTo(x, y, x, y);
-          }
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
         }
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.stroke();
 
         // 数据点
-        for (let i = 0; i < data.length; i++) {
+        for (const p of points) {
           ctx.beginPath();
-          ctx.arc(getXAligned(i), getY(data[i]), 5, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
           ctx.fillStyle = color;
           ctx.fill();
           ctx.strokeStyle = 'white';
@@ -289,8 +283,8 @@ Page({
         }
       };
 
-      drawLine(morningData, '#FC8A40', 0.08);
-      drawLine(eveningData, '#9984FF', 0.08);
+      drawLine(alignedMorning, '#FC8A40', 0.08);
+      drawLine(alignedEvening, '#9984FF', 0.08);
 
       this.setData({ chartReady: true });
     }).exec();

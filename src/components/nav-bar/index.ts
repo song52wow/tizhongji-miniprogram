@@ -8,10 +8,10 @@ Component({
 
   data: {
     tabs: [
-      { label: '总览', icon: '☰', bgColorClass: '' },
-      { label: '记录', icon: '✎', bgColorClass: '' },
-      { label: '趋势', icon: '↗', bgColorClass: '' },
-      { label: '动态', icon: '≡', bgColorClass: '' },
+      { label: '总览', icon: '📊', bgColorClass: '' },
+      { label: '记录', icon: '✏️', bgColorClass: '' },
+      { label: '趋势', icon: '📈', bgColorClass: '' },
+      { label: '动态', icon: '💬', bgColorClass: '' },
     ],
   },
 

@@ -11,7 +11,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "useCompilerPlugins": false,
+    "useCompilerPlugins": ["typescript"],
     "minifyWXML": true,
     "compileWorklet": false,
     "uploadWithSourceMap": true,
@@ -32,5 +32,5 @@
   "appid": "wx1af7482b28717dce",
   "editorSetting": {},
   "libVersion": "3.15.2",
-  "projectRoot": "src"
+  "miniprogramRoot": "src/"
 }

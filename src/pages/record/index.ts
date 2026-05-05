@@ -6,6 +6,7 @@ interface RecordPageData {
   errorMsg: string;
   dateDisplay: string;
   selectedDate: string;
+  maxDate: string;
   selectedPeriod: 'morning' | 'evening';
   weightInput: string;
   noteInput: string;
@@ -19,6 +20,7 @@ Page({
     errorMsg: '',
     dateDisplay: '',
     selectedDate: '',
+    maxDate: '',
     selectedPeriod: 'morning' as 'morning' | 'evening',
     weightInput: '',
     noteInput: '',
@@ -46,6 +48,7 @@ Page({
     this.setData({
       selectedDate,
       dateDisplay: `${displayParts[0]}/${displayParts[1]}/${displayParts[2]}`,
+      maxDate: this.formatDateForApi(new Date()),
       selectedPeriod,
     });
     this.loadExistingRecord();
@@ -94,23 +97,18 @@ Page({
     }
   },
 
-  onDatePickerTap() {
-    wx.showDatePicker({
-      startDate: '2000-01-01',
-      endDate: this.formatDateForApi(new Date()),
-      currentDate: this.data.selectedDate,
-      success: (res: any) => {
-        const [y, m, d] = res.value.split('-').map(Number);
-        this.setData({
-          selectedDate: res.value,
-          dateDisplay: `${d}/${m}/${y}`,
-          existingRecord: null,
-          weightInput: '',
-          noteInput: '',
-        });
-        this.loadExistingRecord();
-      },
+  onDateChange(e: any) {
+    const val = e.detail.value;
+    if (!val) return;
+    const [y, m, d] = val.split('-').map(Number);
+    this.setData({
+      selectedDate: val,
+      dateDisplay: `${d}/${m}/${y}`,
+      existingRecord: null,
+      weightInput: '',
+      noteInput: '',
     });
+    this.loadExistingRecord();
   },
 
   onPeriodChange(e: any) {

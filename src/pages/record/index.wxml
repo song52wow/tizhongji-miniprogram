@@ -7,11 +7,13 @@
     <!-- 日期选择 -->
     <view class="field-section">
       <text class="field-label">日期</text>
-      <view class="date-picker" bindtap="onDatePickerTap">
-        <text class="date-icon">📅</text>
-        <text class="date-value">{{dateDisplay}}</text>
-        <text class="date-arrow">▼</text>
-      </view>
+      <picker mode="date" value="{{selectedDate}}" start="2000-01-01" end="{{maxDate}}" bindchange="onDateChange">
+        <view class="date-picker">
+          <text class="date-icon">📅</text>
+          <text class="date-value">{{dateDisplay}}</text>
+          <text class="date-arrow">▼</text>
+        </view>
+      </picker>
     </view>
 
     <!-- 时段切换 -->

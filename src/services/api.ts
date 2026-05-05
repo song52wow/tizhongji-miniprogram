@@ -1,5 +1,6 @@
 import { WeightRecord, WeightStats, ApiResponse } from '../models/weight';
 import { formatDateForApi } from '../utils/date';
+import { hmacSha256 } from '../utils/crypto';
 
 // 复用后端 API 端口 3000（开发环境需在微信后台配置域名白名单）
 const BASE_URL = 'http://localhost:3000';
@@ -8,15 +9,8 @@ const BASE_URL = 'http://localhost:3000';
 const AUTH_SECRET = 'dev-secret-change-in-production';
 
 function computeSignature(userId: string): string {
-  const key = AUTH_SECRET;
-  // 使用 Web Crypto API
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(key);
-  const msgData = encoder.encode(userId);
-  // 使用同步 HMAC 计算（微信环境支持的简单方式）
-  // 微信小程序不支持 Web Crypto，这里使用简单 hash 作为占位符
-  // 生产环境需接入微信登录态 + 后端 session 机制
-  return AUTH_SECRET; // 临时占位，实际需 Web Crypto
+  // 纯 JS HMAC-SHA256，兼容微信小程序环境（无需 Web Crypto API）
+  return hmacSha256(AUTH_SECRET, userId);
 }
 
 // 获取用户 ID

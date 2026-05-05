@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2017",
     "module": "commonjs",
     "strict": false,
     "esModuleInterop": true,
@@ -9,10 +9,8 @@
     "moduleResolution": "node10",
     "resolveJsonModule": true,
     "noEmit": false,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules"]
 }

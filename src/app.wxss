@@ -1,5 +1,4 @@
-// src/app.wxss
-@import './utils/style.wxss';
+@import "./utils/style.wxss";
 
 page {
   background-color: #F8FAFC;

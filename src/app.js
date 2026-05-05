@@ -1,10 +1,14 @@
-// app.js
+"use strict";
 App({
-  onLaunch() {
-    const logs = wx.getStorageSync('logs') || [];
-    logs.unshift(Date.now());
-    wx.setStorageSync('logs', logs);
-    wx.login({ success: () => {} });
-  },
-  globalData: {},
+    onLaunch() {
+        // 展示本地存储能力
+        const logs = wx.getStorageSync('logs') || [];
+        logs.unshift(Date.now());
+        wx.setStorageSync('logs', logs);
+        // 登录
+        wx.login({
+            success: () => { },
+        });
+    },
+    globalData: {},
 });
