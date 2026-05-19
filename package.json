@@ -4,10 +4,11 @@
   "description": "体重管理微信小程序",
   "scripts": {
     "build:ts": "tsc",
-    "dev": "npm run build:ts && miniprogram build --watch",
-    "build": "npm run build:ts && miniprogram build"
+    "dev": "npm run build:ts && mp dev",
+    "build": "npm run build:ts && mp build"
   },
   "devDependencies": {
+    "miniprogram-build": "^7.0.3",
     "typescript": "^6.0.3"
   }
 }

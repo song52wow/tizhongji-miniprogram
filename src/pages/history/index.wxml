@@ -1,40 +1,43 @@
 <view class="page">
-  <!-- 页面标题 -->
-  <view class="page-header">
-    <text class="page-title">中心控制台</text>
-    <text class="page-subtitle">查看您的活动足迹与系统提醒</text>
+  <view class="mini-kicker">
+    <text>Activity Log</text>
+    <text>Center</text>
   </view>
 
-  <!-- Tab 切换 -->
-  <view class="tab-bar">
+  <text class="page-title">轨迹与提醒</text>
+  <text class="page-subtitle">历史记录和通知中心共用一个活动控制台。</text>
+
+  <view class="tabs">
     <view
-      class="tab-btn {{activeTab === 0 ? 'active' : ''}}"
+      class="tab {{activeTab === 0 ? 'active' : ''}}"
       bindtap="onTabChange"
       data-tab="0"
     >
-      <text class="tab-text">历史记录</text>
+      <text>历史记录</text>
     </view>
     <view
-      class="tab-btn {{activeTab === 1 ? 'active' : ''}}"
+      class="tab {{activeTab === 1 ? 'active' : ''}}"
       bindtap="onTabChange"
       data-tab="1"
     >
-      <text class="tab-text">通知中心</text>
+      <text>通知中心</text>
     </view>
   </view>
 
-  <!-- 历史记录 Tab -->
   <view wx:if="{{activeTab === 0}}" class="tab-content">
     <block wx:if="{{loading && records.length === 0}}">
-      <view class="loading-state">
-        <text class="loading-text">加载中...</text>
+      <view class="empty-state">
+        <text class="empty-text">加载中...</text>
       </view>
     </block>
+
     <block wx:elif="{{records.length === 0}}">
       <view class="empty-state">
-        <text class="empty-text">暂无记录</text>
+        <text class="empty-title">暂无记录</text>
+        <text class="empty-text">记录第一天的体重吧</text>
       </view>
     </block>
+
     <block wx:else>
       <view class="record-list">
         <view
@@ -46,32 +49,36 @@
           bindlongpress="onRecordLongPress"
           data-recordindex="{{index}}"
         >
-          <view class="record-icon-box {{item.period === 'morning' ? 'morning' : 'evening'}}">
-            <text class="record-icon">{{item.period === 'morning' ? '☀' : '🌙'}}</text>
-          </view>
-          <view class="record-info">
+          <text class="capsule {{item.period === 'morning' ? 'morning' : 'evening'}}">
+            {{item.period === 'morning' ? 'AM' : 'PM'}}
+          </text>
+          <view class="record-main">
             <text class="record-date">{{item.dateLabel}}</text>
-            <text wx:if="{{item.note}}" class="record-note">{{item.note}}</text>
+            <text class="record-note">{{item.note || (item.period === 'morning' ? '早晨锚点' : '晚间回声')}}</text>
           </view>
           <view class="record-weight">
-            <text class="weight-value">{{item.weight}}</text>
-            <text class="weight-unit">kg</text>
+            <text class="record-number">{{item.weight}}</text>
+            <text class="record-unit">kg</text>
           </view>
         </view>
       </view>
 
       <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
-        <text wx:if="{{loadingMore}}" class="loading-text">加载中...</text>
-        <text wx:else class="load-more-text">加载更多</text>
+        <text>{{loadingMore ? '加载中...' : '加载更多'}}</text>
       </view>
     </block>
   </view>
 
-  <!-- 通知中心 Tab -->
   <view wx:if="{{activeTab === 1}}" class="tab-content">
-    <view class="empty-state">
-      <text class="empty-icon">🔔</text>
-      <text class="empty-text">暂无通知</text>
+    <view class="notice-card">
+      <text class="capsule signal">通知</text>
+      <text class="notice-title">早晚差值已生成</text>
+      <text class="notice-body">5月19日早晚差值为 +0.5kg，可在趋势页查看。</text>
+    </view>
+    <view class="notice-card muted">
+      <text class="capsule notice">系统</text>
+      <text class="notice-title">暂无更多通知</text>
+      <text class="notice-body">系统、活动和消息提醒会显示在这里。</text>
     </view>
   </view>
 </view>

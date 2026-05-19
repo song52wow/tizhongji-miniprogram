@@ -134,7 +134,7 @@ Page({
             const ctx = canvas.getContext('2d');
             const dpr = wx.getSystemInfoSync().pixelRatio || 2;
             const width = 335;
-            const height = 140;
+            const height = 168;
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             ctx.scale(dpr, dpr);
@@ -146,7 +146,7 @@ Page({
             const range = maxVal - minVal || 1;
             const padding = 16;
             const chartW = width - padding * 2;
-            const chartH = height - 16;
+            const chartH = height - 24;
             const n = allDates.length;
             const getXAligned = (i) => padding + (n <= 1 ? chartW / 2 : (i / (n - 1)) * chartW);
             const getY = (v) => chartH - ((v - minVal) / range) * (chartH - 20) + 10;
@@ -180,7 +180,9 @@ Page({
                     ctx.lineTo(points[i].x, points[i].y);
                 }
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 ctx.stroke();
                 // 数据点
                 for (const p of points) {
@@ -193,8 +195,8 @@ Page({
                     ctx.stroke();
                 }
             };
-            drawLine(alignedMorning, '#FC8A40', 0.08);
-            drawLine(alignedEvening, '#9984FF', 0.08);
+            drawLine(alignedMorning, '#FF8A3D', 0.08);
+            drawLine(alignedEvening, '#6D5DFC', 0.08);
             this.setData({ chartReady: true });
         }).exec();
     },

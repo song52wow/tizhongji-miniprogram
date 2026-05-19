@@ -1,63 +1,67 @@
 /* 全局样式 token */
 page {
-  --blue-primary: #106399;
-  --text-dark: #191C1D;
-  --text-muted: #41474F;
-  --text-light: #717880;
-  --bg-gray: #F8FAFC;
-  --bg-gray-deep: #EDEEEF;
-  --border-gray: #E2E8F0;
-  --morning-orange: #FC8A40;
-  --morning-orange-bg: #FFDBC9;
-  --morning-text: #9B4500;
-  --evening-purple: #9984FF;
-  --evening-purple-bg: #E6DEFF;
-  --evening-text: #6042D6;
-  --accent-blue: #2563EB;
-  --nav-gray: #94A3B8;
-  --delete-red: #BA1A1A;
+  --paper: #FFFAF0;
+  --canvas: #F4F7F2;
+  --panel: #FFFFFF;
+  --ink: #172026;
+  --muted: #5F6871;
+  --line: #DCE5DC;
+  --line-strong: #C6D3C7;
+  --morning: #FF8A3D;
+  --morning-ink: #7D3500;
+  --morning-soft: #FFE2C9;
+  --evening: #6D5DFC;
+  --evening-ink: #2F2386;
+  --evening-soft: #E7E1FF;
+  --action: #0F766E;
+  --action-soft: #D9F3EE;
+  --signal: #22C55E;
+  --signal-soft: #DFF8E8;
+  --notice: #1992D4;
+  --notice-soft: #DFF3FF;
+  --danger: #D64253;
 
-  --card-radius: 12px;
-  --card-radius-large: 20px;
-  --card-radius-small: 8px;
+  --card-radius: 22px;
+  --card-radius-large: 28px;
+  --card-radius-small: 14px;
   --card-gap: 16px;
-  --card-padding: 25px;
-  --page-padding: 20px;
+  --card-padding: 18px;
+  --page-padding: 18px;
   --nav-height: 80px;
-  --fab-size: 56px;
-  --fab-radius: 16px;
+  --fab-size: 58px;
+  --fab-radius: 18px;
 
-  background-color: var(--bg-gray);
+  background-color: var(--canvas);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* 通用卡片样式 */
 .card {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: var(--card-radius);
-  border: 1px solid var(--border-gray);
+  border: 1px solid var(--line);
   padding: var(--card-padding);
-  box-shadow: 0 4px 12px rgba(16, 99, 153, 0.08);
+  box-shadow: 0 10px 24px rgba(43, 72, 54, 0.09);
 }
 
 /* 页面内容容器 */
 .page-content {
-  padding: 24px 20px 120px;
+  padding: 24px 18px 120px;
 }
 
 /* 悬浮按钮 */
 .fab {
   position: fixed;
   bottom: 100px;
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  background-color: var(--blue-primary);
-  border-radius: 16px;
+  right: 18px;
+  width: 58px;
+  height: 58px;
+  background-color: var(--action);
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 28px rgba(15, 118, 110, 0.24);
   z-index: 100;
 }
 

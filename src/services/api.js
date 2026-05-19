@@ -8,10 +8,10 @@ exports.getToday = getToday;
 exports.getDaysAgo = getDaysAgo;
 const date_1 = require("../utils/date");
 const crypto_1 = require("../utils/crypto");
-// 复用后端 API 端口 3000（开发环境需在微信后台配置域名白名单）
-const BASE_URL = 'http://localhost:3000';
+// 生产环境后端服务地址（需在微信公众平台配置域名白名单）
+const BASE_URL = 'https://tizhongji.cisonc.site';
 // 开发环境密钥（生产环境需从安全渠道获取，保持与后端一致）
-const AUTH_SECRET = 'dev-secret-change-in-production';
+const AUTH_SECRET = 'b242de131e53f5982e6681e836ae49870291f74edfb083b068912b454b6e676e23c0d8a9be43f2208e0f5fdad7020d36';
 function computeSignature(userId) {
     // 纯 JS HMAC-SHA256，兼容微信小程序环境（无需 Web Crypto API）
     return (0, crypto_1.hmacSha256)(AUTH_SECRET, userId);

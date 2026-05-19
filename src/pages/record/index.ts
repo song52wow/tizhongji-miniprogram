@@ -143,6 +143,8 @@ Page({
   },
 
   async onSaveTap() {
+    if (this.data.saving) return;
+
     const { weightInput, noteInput, selectedDate, selectedPeriod } = this.data;
 
     // 校验

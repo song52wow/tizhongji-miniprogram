@@ -1,133 +1,94 @@
 <view class="page">
-  <!-- 页面标题 -->
-  <view class="page-header">
-    <text class="page-title">趋势与统计</text>
-    <text class="page-subtitle">观察您的长期进展与规律</text>
+  <view class="mini-kicker">
+    <text>Rhythm Graph</text>
+    <text>{{rangeLabels[selectedRangeIndex]}}</text>
   </view>
 
-  <!-- 时间范围筛选 -->
-  <view class="range-filter">
-    <view
-      wx:for="{{rangeLabels}}"
-      wx:key="index"
-      class="range-btn {{selectedRangeIndex === index ? 'active' : ''}}"
-      bindtap="onRangeChange"
-      data-index="{{index}}"
-    >
-      <text class="range-text">{{item}}</text>
-    </view>
-  </view>
+  <text class="page-title">周期洞察</text>
+  <text class="page-subtitle">用早晚双线观察体重走势和日内波动。</text>
 
-  <!-- 趋势图表卡片 -->
-  <view class="chart-card">
-    <view class="chart-header">
-      <text class="chart-title">体重变化趋势</text>
-      <view class="chart-legend">
-        <view class="legend-item">
-          <view class="legend-dot morning"></view>
-          <text class="legend-text">早晨</text>
+  <view class="stack">
+    <view class="range-filter">
+      <view
+        wx:for="{{rangeLabels}}"
+        wx:key="index"
+        class="range-btn {{selectedRangeIndex === index ? 'active' : ''}}"
+        bindtap="onRangeChange"
+        data-index="{{index}}"
+      >
+        <text>{{item}}</text>
+      </view>
+    </view>
+
+    <view class="rhythm-card chart-card">
+      <view class="card-top">
+        <text class="card-title">早晚双线</text>
+        <view class="legend">
+          <text class="legend-dot morning"></text>
+          <text>早</text>
+          <text class="legend-dot evening"></text>
+          <text>晚</text>
         </view>
-        <view class="legend-item">
-          <view class="legend-dot evening"></view>
-          <text class="legend-text">夜晚</text>
+      </view>
+      <view class="chart-body">
+        <canvas canvas-id="trendChart" type="2d" class="trend-chart" bindtouchend="onChartTouch"></canvas>
+        <view wx:if="{{!loading && morningData.length === 0 && eveningData.length === 0}}" class="chart-empty">
+          <text class="empty-text">记录第一天的体重吧</text>
         </view>
       </view>
     </view>
-    <view class="chart-body">
-      <canvas canvas-id="trendChart" type="2d" class="trend-chart" bindtouchend="onChartTouch"></canvas>
-      <view wx:if="{{!loading && morningData.length === 0 && eveningData.length === 0}}" class="chart-empty">
-        <text class="empty-text">暂无数据</text>
-      </view>
-    </view>
-  </view>
 
-  <!-- 统计网格 -->
-  <view class="stats-grid">
-    <!-- 顶部行：平均早体重 + 平均晚体重 -->
-    <view class="stats-row">
+    <view class="stat-grid">
       <view class="stat-card">
-        <view class="stat-header">
-          <view class="stat-icon-box morning-bg">
-            <text class="stat-icon">☀</text>
-          </view>
-          <text class="stat-label">平均早体重</text>
-        </view>
+        <text class="stat-label">平均早体重</text>
         <view class="stat-value-row">
-          <text class="stat-value large">{{avgMorningWeight}}</text>
+          <text class="stat-value morning">{{avgMorningWeight}}</text>
           <text class="stat-unit">kg</text>
         </view>
       </view>
+
       <view class="stat-card">
-        <view class="stat-header">
-          <view class="stat-icon-box evening-bg">
-            <text class="stat-icon">🌙</text>
-          </view>
-          <text class="stat-label">平均晚体重</text>
-        </view>
+        <text class="stat-label">平均晚体重</text>
         <view class="stat-value-row">
-          <text class="stat-value large">{{avgEveningWeight}}</text>
+          <text class="stat-value evening">{{avgEveningWeight}}</text>
           <text class="stat-unit">kg</text>
         </view>
       </view>
-    </view>
 
-    <!-- 体重变化（横向全宽） -->
-    <view class="stat-card change-card">
-      <view class="stat-header">
-        <view class="stat-icon-box blue-bg">
-          <text class="stat-icon">{{changeDirection}}</text>
-        </view>
-        <text class="stat-label blue-label">体重变化</text>
-      </view>
-      <view class="stat-value-row">
-        <text class="stat-value large blue-value">{{changeDisplay}}</text>
-        <text class="stat-unit blue-unit">kg</text>
-      </view>
-    </view>
-
-    <!-- 底部行：最低 + 最高 -->
-    <view class="stats-row">
-      <view class="stat-card">
-        <view class="stat-header">
-          <view class="stat-icon-box gray-bg">
-            <text class="stat-icon">↓</text>
-          </view>
-          <text class="stat-label">最低体重</text>
-        </view>
+      <view class="stat-card wide">
+        <text class="stat-label">周期变化</text>
         <view class="stat-value-row">
-          <text class="stat-value medium">{{minWeight}}</text>
+          <text class="stat-value signal">{{changeDisplay}}</text>
+          <text class="stat-unit">kg / {{rangeLabels[selectedRangeIndex]}}</text>
+        </view>
+      </view>
+
+      <view class="stat-card">
+        <text class="stat-label">最低体重</text>
+        <view class="stat-value-row">
+          <text class="stat-value">{{minWeight}}</text>
           <text class="stat-unit">kg</text>
         </view>
-        <text wx:if="{{minWeightDate}}" class="stat-subtext">{{minWeightDate}} 记录</text>
+        <text wx:if="{{minWeightDate}}" class="stat-subtext">{{minWeightDate}}</text>
       </view>
+
       <view class="stat-card">
-        <view class="stat-header">
-          <view class="stat-icon-box gray-bg">
-            <text class="stat-icon">↑</text>
-          </view>
-          <text class="stat-label">最高体重</text>
-        </view>
+        <text class="stat-label">最高体重</text>
         <view class="stat-value-row">
-          <text class="stat-value medium">{{maxWeight}}</text>
+          <text class="stat-value">{{maxWeight}}</text>
           <text class="stat-unit">kg</text>
         </view>
-        <text wx:if="{{maxWeightDate}}" class="stat-subtext">{{maxWeightDate}} 记录</text>
+        <text wx:if="{{maxWeightDate}}" class="stat-subtext">{{maxWeightDate}}</text>
       </view>
-    </view>
 
-    <!-- 平均早晚差值（全宽） -->
-    <view class="stat-card">
-      <view class="stat-header">
-        <view class="stat-icon-box gray-bg">
-          <text class="stat-icon">⚖</text>
-        </view>
+      <view class="stat-card wide soft">
         <text class="stat-label">平均早晚差值</text>
+        <view class="stat-value-row">
+          <text class="stat-value">{{avgWeightDiff}}</text>
+          <text class="stat-unit">kg</text>
+        </view>
+        <text class="stat-subtext">{{avgDiffSubtext}}</text>
       </view>
-      <view class="stat-value-row">
-        <text class="stat-value medium">{{avgWeightDiff}}</text>
-        <text class="stat-unit">kg</text>
-      </view>
-      <text class="stat-subtext">{{avgDiffSubtext}}</text>
     </view>
   </view>
 </view>

@@ -121,6 +121,8 @@ Page({
         this.setData({ noteInput: e.detail.value });
     },
     async onSaveTap() {
+        if (this.data.saving)
+            return;
         const { weightInput, noteInput, selectedDate, selectedPeriod } = this.data;
         // 校验
         const trimmedWeight = weightInput.trim();

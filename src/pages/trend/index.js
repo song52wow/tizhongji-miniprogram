@@ -161,7 +161,7 @@ Page({
             const ctx = canvas.getContext('2d');
             const dpr = wx.getSystemInfoSync().pixelRatio;
             const width = 320;
-            const height = 200;
+            const height = 178;
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             ctx.scale(dpr, dpr);
@@ -179,14 +179,14 @@ Page({
             // Draw horizontal grid lines and Y-axis labels
             const gridCount = 4;
             ctx.font = '10px sans-serif';
-            ctx.fillStyle = '#999';
+            ctx.fillStyle = '#5F6871';
             for (let g = 0; g <= gridCount; g++) {
                 const y = chartY + chartH - (g / gridCount) * chartH;
                 const val = minVal + (g / gridCount) * range;
                 // Grid line
                 ctx.beginPath();
                 ctx.setLineDash([3, 3]);
-                ctx.strokeStyle = '#eee';
+                ctx.strokeStyle = '#DCE5DC';
                 ctx.lineWidth = 1;
                 ctx.moveTo(chartX, y);
                 ctx.lineTo(chartX + chartW, y);
@@ -196,7 +196,7 @@ Page({
                 ctx.fillText(val.toFixed(1), padding, y + 3);
             }
             // Y-axis label unit
-            ctx.fillStyle = '#666';
+            ctx.fillStyle = '#5F6871';
             ctx.font = '9px sans-serif';
             ctx.fillText('kg', padding, chartY + 10);
             const getY = (v) => chartY + chartH - ((v - minVal) / range) * chartH;
@@ -232,7 +232,9 @@ Page({
                     ctx.lineTo(points[i].x, points[i].y);
                 }
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 ctx.stroke();
                 // 数据点
                 for (const p of points) {
@@ -245,8 +247,8 @@ Page({
                     ctx.stroke();
                 }
             };
-            drawLine(alignedMorning, '#FC8A40', 0.08);
-            drawLine(alignedEvening, '#9984FF', 0.08);
+            drawLine(alignedMorning, '#FF8A3D', 0.08);
+            drawLine(alignedEvening, '#6D5DFC', 0.08);
             this.setData({ chartReady: true });
         }).exec();
     },

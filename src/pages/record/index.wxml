@@ -1,83 +1,77 @@
 <view class="page">
-  <!-- 页面标题 -->
-  <view class="page-title">记录体重</view>
+  <view class="mini-kicker">
+    <text>Log Console</text>
+    <text>v2</text>
+  </view>
 
-  <!-- 输入卡片 -->
-  <view class="input-card">
-    <!-- 日期选择 -->
-    <view class="field-section">
+  <text class="page-title">称重控制台</text>
+  <text class="page-subtitle">选择日期和时段，同日早晚各保留一条记录。</text>
+
+  <view class="stack">
+    <view class="field">
       <text class="field-label">日期</text>
       <picker mode="date" value="{{selectedDate}}" start="2000-01-01" end="{{maxDate}}" bindchange="onDateChange">
-        <view class="date-picker">
-          <text class="date-icon">📅</text>
-          <text class="date-value">{{dateDisplay}}</text>
-          <text class="date-arrow">▼</text>
+        <view class="field-box date-box">
+          <text>{{selectedDate}}</text>
+          <text class="field-arrow">⌄</text>
         </view>
       </picker>
     </view>
 
-    <!-- 时段切换 -->
-    <view class="field-section">
+    <view class="field">
       <text class="field-label">时段</text>
-      <view class="period-toggle">
+      <view class="period-switch">
         <view
-          class="period-btn morning {{selectedPeriod === 'morning' ? 'active' : ''}}"
+          class="period-option morning {{selectedPeriod === 'morning' ? 'active' : ''}}"
           bindtap="onPeriodChange"
           data-period="morning"
         >
-          <text class="period-icon">☀</text>
-          <text class="period-text">早晨</text>
+          <text>早晨锚点</text>
         </view>
         <view
-          class="period-btn evening {{selectedPeriod === 'evening' ? 'active' : ''}}"
+          class="period-option evening {{selectedPeriod === 'evening' ? 'active' : ''}}"
           bindtap="onPeriodChange"
           data-period="evening"
         >
-          <text class="period-icon">🌙</text>
-          <text class="period-text">晚上</text>
+          <text>晚间回声</text>
         </view>
       </view>
     </view>
 
-    <!-- 体重输入 -->
-    <view class="field-section weight-input-section">
-      <view class="weight-input-box">
-        <input
-          class="weight-input"
-          type="digit"
-          placeholder="0.0"
-          value="{{weightInput}}"
-          bindinput="onWeightInput"
-          confirm-type="done"
-        />
-        <text class="weight-suffix">kg</text>
-      </view>
-      <text wx:if="{{existingRecord}}" class="existing-hint">已有记录，更新将覆盖</text>
+    <view class="weight-console">
+      <input
+        class="weight-input"
+        type="digit"
+        placeholder="70.0"
+        value="{{weightInput}}"
+        bindinput="onWeightInput"
+        confirm-type="done"
+      />
+      <text class="weight-suffix">kg</text>
     </view>
 
-    <!-- 备注输入 -->
-    <view class="field-section">
-      <text class="field-label">备注 (选填)</text>
-      <view class="note-box">
+    <text wx:if="{{existingRecord}}" class="existing-hint">
+      已有记录，保存将覆盖{{selectedPeriod === 'morning' ? '早晨锚点' : '晚间回声'}}。
+    </text>
+
+    <view class="field">
+      <text class="field-label">备注</text>
+      <view class="field-box note-box">
         <textarea
           class="note-input"
-          placeholder="添加记录备注..."
+          placeholder="空腹，训练日"
           maxlength="200"
           value="{{noteInput}}"
           bindinput="onNoteInput"
         ></textarea>
       </view>
     </view>
-  </view>
 
-  <!-- 错误提示 -->
-  <text wx:if="{{errorMsg}}" class="error-msg">{{errorMsg}}</text>
+    <text wx:if="{{errorMsg}}" class="error-msg">{{errorMsg}}</text>
 
-  <!-- 保存按钮 -->
-  <view class="save-btn {{saving ? 'saving' : ''}}" bindtap="{{saving ? '' : 'onSaveTap'}}">
-    <text wx:if="{{!saving}}" class="save-btn-icon">✓</text>
-    <text wx:if="{{!saving}}" class="save-btn-text">保存记录</text>
-    <view wx:if="{{saving}}" class="save-loading"></view>
-    <text wx:if="{{saving}}" class="save-btn-text">保存中...</text>
+    <view class="save-btn {{saving ? 'saving' : ''}}" bindtap="onSaveTap">
+      <view wx:if="{{saving}}" class="save-loading"></view>
+      <text>{{saving ? '保存中...' : '保存记录'}}</text>
+    </view>
   </view>
 </view>

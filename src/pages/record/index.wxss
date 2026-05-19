@@ -1,245 +1,198 @@
 page {
-  background-color: #F8FAFC;
+  background: #F4F7F2;
 }
 
 .page {
-  padding: 24px 20px 120px;
   min-height: 100vh;
+  padding: 24px 18px 120px;
+  color: #172026;
 }
 
-/* 页面标题 */
+.mini-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  color: #5F6871;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .page-title {
-  font-size: 32px;
-  font-weight: 500;
-  color: #191C1D;
-  margin-bottom: 40px;
-}
-
-/* 输入卡片 */
-.input-card {
-  background-color: white;
-  border-radius: 12px;
-  border: 1px solid rgba(193, 199, 209, 0.5);
-  padding: 25px;
-  box-shadow: 0 4px 12px rgba(16, 99, 153, 0.08);
-  margin-bottom: 12px;
-}
-
-.field-section {
-  margin-bottom: 24px;
-}
-
-.field-section:last-child {
-  margin-bottom: 0;
-}
-
-/* 日期选择 */
-.field-label {
   display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: #41474F;
-  letter-spacing: 0.6px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  font-size: 34px;
+  line-height: 1.08;
+  font-weight: 800;
+  color: #172026;
 }
 
-.date-picker {
-  display: flex;
-  align-items: center;
-  background-color: #EDEEEF;
-  border-radius: 8px;
-  padding: 13px;
+.page-subtitle {
+  display: block;
+  margin-bottom: 18px;
+  color: #5F6871;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
-.date-icon {
-  font-size: 16px;
-  margin-right: 8px;
-}
-
-.date-value {
-  flex: 1;
-  font-size: 16px;
-  color: #191C1D;
-}
-
-.date-arrow {
-  font-size: 12px;
-  color: #191C1D;
-}
-
-/* 时段切换 */
-.period-toggle {
-  display: flex;
-  gap: 12px;
-  background-color: #EDEEEF;
-  border-radius: 8px;
-  padding: 4px;
-}
-
-.period-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 12px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.period-btn.inactive {
-  background-color: transparent;
-}
-
-.period-icon {
-  font-size: 16px;
-}
-
-.period-text {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-/* 早晨激活态 */
-.period-btn.morning.active {
-  background-color: #9B4500;
-}
-
-.period-btn.morning.active .period-icon,
-.period-btn.morning.active .period-text {
-  color: white;
-}
-
-.period-btn.morning.inactive .period-icon,
-.period-btn.morning.inactive .period-text {
-  color: #41474F;
-}
-
-/* 晚上激活态 */
-.period-btn.evening.active {
-  background-color: #6042D6;
-}
-
-.period-btn.evening.active .period-icon,
-.period-btn.evening.active .period-text {
-  color: white;
-}
-
-.period-btn.evening.inactive .period-icon,
-.period-btn.evening.inactive .period-text {
-  color: #41474F;
-}
-
-/* 体重输入 */
-.weight-input-section {
+.stack {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 14px;
 }
 
-.weight-input-box {
+.field {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  color: #5F6871;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.field-box {
+  min-height: 52px;
+  padding: 15px;
+  border: 1px solid #DCE5DC;
+  border-radius: 14px;
+  background: #FFFFFF;
+  color: #172026;
+  font-size: 16px;
+}
+
+.date-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.field-arrow {
+  color: #5F6871;
+  font-size: 18px;
+}
+
+.period-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #DCE5DC;
+  border-radius: 14px;
+  background: #FFFFFF;
+}
+
+.period-option {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  background-color: #EDEEEF;
+  min-height: 52px;
   border-radius: 8px;
-  padding: 42px 13px;
-  width: 100%;
+  color: #5F6871;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.period-option.morning.active {
+  background: #FF8A3D;
+  color: #3A1600;
+}
+
+.period-option.evening.active {
+  background: #6D5DFC;
+  color: #FFFFFF;
+}
+
+.weight-console {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  border: 1px solid #DCE5DC;
+  border-radius: 22px;
+  background: #FFFAF0;
+  box-shadow: 0 10px 24px rgba(43, 72, 54, 0.09);
 }
 
 .weight-input {
-  font-size: 48px;
-  font-weight: 600;
-  color: #106399;
-  letter-spacing: -0.96px;
+  width: 210px;
+  height: 86px;
+  color: #172026;
+  font-size: 64px;
+  line-height: 86px;
+  font-weight: 800;
   text-align: center;
   background: transparent;
-  width: 200px;
 }
 
 .weight-input::placeholder {
-  color: #C1C7D1;
-  font-size: 48px;
-  font-weight: 600;
+  color: rgba(23, 32, 38, 0.22);
 }
 
 .weight-suffix {
-  font-size: 16px;
-  color: #41474F;
-  margin-left: 4px;
+  display: inline-block;
+  margin-left: 6px;
+  color: #5F6871;
+  font-size: 18px;
+  font-weight: 800;
+  transform: translateY(12px);
 }
 
 .existing-hint {
+  color: #7D3500;
   font-size: 12px;
-  color: #717880;
-  margin-top: 8px;
+  line-height: 1.45;
 }
 
-/* 备注输入 */
 .note-box {
-  background-color: #EDEEEF;
-  border-radius: 8px;
-  padding: 13px;
-  min-height: 61px;
+  min-height: 88px;
 }
 
 .note-input {
-  font-size: 16px;
-  color: #191C1D;
   width: 100%;
-  min-height: 40px;
+  min-height: 64px;
+  color: #172026;
+  font-size: 16px;
+  line-height: 1.5;
   background: transparent;
 }
 
 .note-input::placeholder {
-  color: #C1C7D1;
-  font-size: 16px;
+  color: rgba(95, 104, 113, 0.7);
 }
 
-/* 错误提示 */
 .error-msg {
-  display: block;
-  color: #BA1A1A;
+  color: #D64253;
   font-size: 14px;
-  margin-top: 12px;
-  margin-left: 4px;
+  line-height: 1.5;
 }
 
-/* 保存按钮 */
 .save-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
-  padding: 16px 0;
-  background-color: #106399;
-  border-radius: 999px;
-  box-shadow: 0 4px 8px rgba(16, 99, 153, 0.2);
-  margin-top: 12px;
+  min-height: 56px;
+  border-radius: 14px;
+  background: #0F766E;
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: 800;
+  box-shadow: 0 12px 28px rgba(15, 118, 110, 0.24);
 }
 
-.save-btn.disabled,
 .save-btn.saving {
-  opacity: 0.7;
-}
-
-.save-btn-icon {
-  color: white;
-  font-size: 18px;
-}
-
-.save-btn-text {
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
+  opacity: 0.72;
 }
 
 .save-loading {
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

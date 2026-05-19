@@ -1,76 +1,65 @@
 <view class="page">
-  <!-- 日期标题 -->
-  <view class="date-header">
-    <text class="today-title">今天</text>
-    <text class="date-label">{{dateLabel}}</text>
+  <view class="mini-kicker">
+    <text>Today Anchor</text>
+    <text>{{dateLabel}}</text>
   </view>
 
-  <!-- 早晨体重卡片 -->
-  <view class="weight-card morning-card">
-    <view class="card-header">
-      <view class="card-header-left">
-        <view class="icon-circle morning-icon-bg">
-          <text class="icon-sun">☀</text>
+  <text class="page-title">今天的体重节律</text>
+  <text class="page-subtitle">早晨与晚间记录会生成今日差值。</text>
+
+  <view class="stack">
+    <view class="rhythm-card primary-card">
+      <view class="card-top">
+        <text class="capsule morning">AM</text>
+        <text class="micro">{{morningTime}}</text>
+      </view>
+      <view class="weight-readout">
+        <text class="weight-number">{{morningWeight !== null ? morningWeight : '--'}}</text>
+        <text class="weight-unit">kg</text>
+      </view>
+      <text class="delta">{{morningChange}}</text>
+    </view>
+
+    <view class="time-rail">
+      <text class="capsule morning">晨</text>
+      <view class="rail-line"></view>
+      <text class="capsule evening">夜</text>
+    </view>
+
+    <view class="rhythm-card">
+      <view class="card-top">
+        <text class="capsule evening">PM</text>
+        <text class="micro">{{eveningTime === '--:--' ? '未记录' : eveningTime}}</text>
+      </view>
+      <view class="weight-readout">
+        <text class="weight-number">{{eveningWeight !== null ? eveningWeight : '--'}}</text>
+        <text class="weight-unit">kg</text>
+      </view>
+      <text class="micro">{{eveningWeight !== null ? eveningChange : '记录后计算 evening - morning'}}</text>
+    </view>
+
+    <view class="rhythm-card chart-card" bindtap="onChartLongPress">
+      <view class="card-top">
+        <text class="card-title">7天波形</text>
+        <text class="micro">查看趋势</text>
+      </view>
+      <view class="chart-container">
+        <canvas canvas-id="sparkline" type="2d" class="chart-canvas" bindlongpress="onChartLongPress"></canvas>
+        <view wx:if="{{!chartReady}}" class="chart-placeholder">
+          <text class="placeholder-text">加载中...</text>
         </view>
-        <text class="card-label">早晨体重</text>
       </view>
-      <text class="card-time">{{morningTime}}</text>
-    </view>
-    <view class="weight-row">
-      <text class="weight-number">{{morningWeight !== null ? morningWeight : '--'}}</text>
-      <text class="weight-unit">kg</text>
-    </view>
-    <view class="change-row">
-      <text class="change-arrow">↓</text>
-      <text class="change-text">{{morningChange}}</text>
+      <view class="chart-range">
+        <text class="micro">{{dateRangeStart}}</text>
+        <text class="micro">今天</text>
+      </view>
     </view>
   </view>
 
-  <!-- 晚上体重卡片 -->
-  <view class="weight-card evening-card">
-    <view class="card-header">
-      <view class="card-header-left">
-        <view class="icon-circle evening-icon-bg">
-          <text class="icon-moon">🌙</text>
-        </view>
-        <text class="card-label">晚上体重</text>
-      </view>
-      <text class="card-time">{{eveningTime}}</text>
-    </view>
-    <view class="weight-row">
-      <text class="weight-number">{{eveningWeight !== null ? eveningWeight : '--'}}</text>
-      <text class="weight-unit">kg</text>
-    </view>
-    <view class="change-row">
-      <text class="change-arrow-balance">⚖</text>
-      <text class="change-text-evening">{{eveningChange}}</text>
-    </view>
-  </view>
-
-  <!-- 近7天趋势卡片 -->
-  <view class="trend-card">
-    <view class="trend-header">
-      <text class="trend-title">近7天趋势</text>
-      <text class="trend-arrow">›</text>
-    </view>
-    <view class="chart-container">
-      <canvas canvas-id="sparkline" type="2d" class="chart-canvas" bindlongpress="onChartLongPress"></canvas>
-      <view wx:if="{{!chartReady}}" class="chart-placeholder">
-        <text class="placeholder-text">加载中...</text>
-      </view>
-    </view>
-    <view class="chart-range">
-      <text class="range-label">{{dateRangeStart}}</text>
-      <text class="range-label">今天</text>
-    </view>
-  </view>
-
-  <!-- 加载状态 -->
   <view wx:if="{{loading}}" class="loading-overlay">
     <text>加载中...</text>
   </view>
 
-  <!-- 悬浮添加按钮 -->
   <view class="fab" bindtap="onAddTap">
     <text class="fab-icon">+</text>
   </view>

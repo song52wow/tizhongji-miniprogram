@@ -1,6 +1,7 @@
 @import "./utils/style.wxss";
 
 page {
-  background-color: #F8FAFC;
+  background-color: #F4F7F2;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #172026;
 }

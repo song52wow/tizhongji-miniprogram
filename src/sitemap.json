@@ -1,3 +1,6 @@
 {
-  "desc": "本文件用于小程序开发者工具生成 sitemap.xml"
+  "rules": [{
+    "action": "allow",
+    "page": "*"
+  }]
 }
