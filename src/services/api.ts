@@ -1,27 +1,9 @@
 import { WeightRecord, WeightStats, ApiResponse } from '../models/weight';
 import { formatDateForApi } from '../utils/date';
-import { hmacSha256 } from '../utils/crypto';
+import { ensureLoggedIn, getAccessToken } from './auth';
 
 // 生产环境后端服务地址（需在微信公众平台配置域名白名单）
 const BASE_URL = 'https://tizhongji.cisonc.site';
-
-// 开发环境密钥（生产环境需从安全渠道获取，保持与后端一致）
-const AUTH_SECRET = 'b242de131e53f5982e6681e836ae49870291f74edfb083b068912b454b6e676e23c0d8a9be43f2208e0f5fdad7020d36';
-
-function computeSignature(userId: string): string {
-  // 纯 JS HMAC-SHA256，兼容微信小程序环境（无需 Web Crypto API）
-  return hmacSha256(AUTH_SECRET, userId);
-}
-
-// 获取用户 ID
-function getUserId(): string {
-  let userId = wx.getStorageSync('userId');
-  if (!userId) {
-    userId = `anon_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-    wx.setStorageSync('userId', userId);
-  }
-  return userId;
-}
 
 interface RequestOptions {
   url: string;
@@ -29,31 +11,37 @@ interface RequestOptions {
   data?: any;
 }
 
-function request<T>(options: RequestOptions): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const userId = getUserId();
-    const signature = computeSignature(userId);
-    wx.request({
-      url: BASE_URL + options.url,
-      method: options.method || 'GET',
-      data: options.data,
-      header: {
-        'Content-Type': 'application/json',
-        'X-User-Id': userId,
-        'X-User-Signature': signature,
-      },
-      success: (res: any) => {
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(res.data as T);
-        } else {
-          reject(new Error((res.data as any)?.error || `请求失败 (${res.statusCode})`));
-        }
-      },
-      fail: (err: any) => {
-        reject(new Error(err.errMsg || '网络请求失败'));
-      },
-    });
-  });
+function request<T>(options: RequestOptions, isRetry = false): Promise<T> {
+  return ensureLoggedIn().then(
+    () =>
+      new Promise((resolve, reject) => {
+        const token = getAccessToken();
+        wx.request({
+          url: BASE_URL + options.url,
+          method: options.method || 'GET',
+          data: options.data,
+          header: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          success: (res: any) => {
+            if (res.statusCode === 401 && !isRetry) {
+              wx.removeStorageSync('accessToken');
+              request<T>(options, true).then(resolve).catch(reject);
+              return;
+            }
+            if (res.statusCode >= 200 && res.statusCode < 300) {
+              resolve(res.data as T);
+            } else {
+              reject(new Error((res.data as any)?.error || `请求失败 (${res.statusCode})`));
+            }
+          },
+          fail: (err: any) => {
+            reject(new Error(err.errMsg || '网络请求失败'));
+          },
+        });
+      })
+  );
 }
 
 // 获取体重记录列表

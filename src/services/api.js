@@ -7,39 +7,27 @@ exports.deleteWeightRecord = deleteWeightRecord;
 exports.getToday = getToday;
 exports.getDaysAgo = getDaysAgo;
 const date_1 = require("../utils/date");
-const crypto_1 = require("../utils/crypto");
+const auth_1 = require("./auth");
 // 生产环境后端服务地址（需在微信公众平台配置域名白名单）
 const BASE_URL = 'https://tizhongji.cisonc.site';
-// 开发环境密钥（生产环境需从安全渠道获取，保持与后端一致）
-const AUTH_SECRET = 'b242de131e53f5982e6681e836ae49870291f74edfb083b068912b454b6e676e23c0d8a9be43f2208e0f5fdad7020d36';
-function computeSignature(userId) {
-    // 纯 JS HMAC-SHA256，兼容微信小程序环境（无需 Web Crypto API）
-    return (0, crypto_1.hmacSha256)(AUTH_SECRET, userId);
-}
-// 获取用户 ID
-function getUserId() {
-    let userId = wx.getStorageSync('userId');
-    if (!userId) {
-        userId = `anon_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-        wx.setStorageSync('userId', userId);
-    }
-    return userId;
-}
-function request(options) {
-    return new Promise((resolve, reject) => {
-        const userId = getUserId();
-        const signature = computeSignature(userId);
+function request(options, isRetry = false) {
+    return (0, auth_1.ensureLoggedIn)().then(() => new Promise((resolve, reject) => {
+        const token = (0, auth_1.getAccessToken)();
         wx.request({
             url: BASE_URL + options.url,
             method: options.method || 'GET',
             data: options.data,
             header: {
                 'Content-Type': 'application/json',
-                'X-User-Id': userId,
-                'X-User-Signature': signature,
+                Authorization: `Bearer ${token}`,
             },
             success: (res) => {
                 var _a;
+                if (res.statusCode === 401 && !isRetry) {
+                    wx.removeStorageSync('accessToken');
+                    request(options, true).then(resolve).catch(reject);
+                    return;
+                }
                 if (res.statusCode >= 200 && res.statusCode < 300) {
                     resolve(res.data);
                 }
@@ -51,7 +39,7 @@ function request(options) {
                 reject(new Error(err.errMsg || '网络请求失败'));
             },
         });
-    });
+    }));
 }
 // 获取体重记录列表
 async function getWeightRecords(params) {
