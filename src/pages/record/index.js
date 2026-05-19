@@ -156,7 +156,9 @@ Page({
                 weight: weight,
                 note: noteInput.trim() || undefined,
             });
-            wx.navigateBack();
+            this.setData({ saving: false });
+            wx.showToast({ title: '保存成功', icon: 'success', duration: 1500 });
+            wx.switchTab({ url: '/pages/home/index' });
         }
         catch (e) {
             console.error('save error:', e);
