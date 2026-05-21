@@ -11,9 +11,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "useCompilerPlugins": [
-      "typescript"
-    ],
+    "useCompilerPlugins": [],
     "minifyWXML": true,
     "compileWorklet": false,
     "uploadWithSourceMap": true,
@@ -28,11 +26,20 @@
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "file",
+        "value": "app.config.json"
+      },
+      {
+        "type": "glob2",
+        "value": "**/app.config.*"
+      }
+    ],
     "include": []
   },
   "appid": "wxf3338ccdc5dc83be",
   "editorSetting": {},
   "libVersion": "3.15.2",
-  "miniprogramRoot": "src/"
+  "miniprogramRoot": "dist/"
 }

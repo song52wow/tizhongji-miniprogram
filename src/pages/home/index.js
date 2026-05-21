@@ -16,6 +16,9 @@ Page({
         chartLineData: [],
     },
     onLoad() {
+        wx.showShareMenu({
+            menus: ['shareAppMessage'],
+        });
         this.loadData();
     },
     onShow() {
@@ -209,5 +212,11 @@ Page({
         wx.switchTab({
             url: '/pages/trend/index',
         });
+    },
+    onShareAppMessage() {
+        return {
+            title: '一起记录每天的体重节律',
+            path: '/pages/home/index',
+        };
     },
 });
