@@ -147,6 +147,72 @@ page {
   line-height: 1.45;
 }
 
+.bmi-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid #DCE5DC;
+  background: #FFFFFF;
+}
+
+.bmi-badge .bmi-label {
+  color: #5F6871;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.bmi-badge .bmi-number {
+  font-size: 24px;
+  font-weight: 800;
+  color: #172026;
+}
+
+.bmi-badge .bmi-cat {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.bmi-badge.underweight .bmi-cat { background: #3D9BFF; }
+.bmi-badge.normal .bmi-cat { background: #16A34A; }
+.bmi-badge.overweight .bmi-cat { background: #FF8A3D; }
+.bmi-badge.obese .bmi-cat { background: #D64253; }
+
+.bmi-hint {
+  color: #5F6871;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.bodyfat-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bodyfat-input {
+  flex: 1;
+  height: 24px;
+  color: #172026;
+  font-size: 16px;
+  background: transparent;
+}
+
+.bodyfat-input::placeholder {
+  color: rgba(95, 104, 113, 0.7);
+}
+
+.bodyfat-suffix {
+  color: #5F6871;
+  font-size: 16px;
+  font-weight: 800;
+}
+
 .note-box {
   min-height: 88px;
 }

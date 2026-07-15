@@ -1,4 +1,4 @@
-import { WeightRecord, WeightStats, ApiResponse } from '../models/weight';
+import { WeightRecord, WeightStats, ApiResponse, UserProfile } from '../models/weight';
 import { formatDateForApi } from '../utils/date';
 import { ensureLoggedIn, getAccessToken } from './auth';
 
@@ -7,7 +7,7 @@ const BASE_URL = 'https://tizhongji.cisonc.site';
 
 interface RequestOptions {
   url: string;
-  method?: 'GET' | 'POST' | 'DELETE';
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   data?: any;
 }
 
@@ -71,6 +71,7 @@ export async function createWeightRecord(params: {
   date: string;
   period: 'morning' | 'evening';
   weight: number;
+  bodyFat?: number;
   note?: string;
 }): Promise<WeightRecord> {
   const data = await request<WeightRecord>({
@@ -80,6 +81,7 @@ export async function createWeightRecord(params: {
       date: params.date,
       period: params.period,
       weight: params.weight,
+      ...(params.bodyFat !== undefined && params.bodyFat !== null ? { bodyFat: params.bodyFat } : {}),
       ...(params.note ? { note: params.note } : {}),
     },
   });
@@ -107,6 +109,24 @@ export async function deleteWeightRecord(id: string): Promise<{ success: boolean
     url: `/weight-records/${id}`,
     method: 'DELETE',
   });
+}
+
+// 获取用户资料（身高）
+export async function getProfile(): Promise<UserProfile> {
+  const res = await request<{ success: boolean; data: UserProfile }>({
+    url: '/profile',
+  });
+  return res.data || { height: null };
+}
+
+// 更新用户资料（身高）
+export async function updateProfile(height: number | null): Promise<UserProfile> {
+  const res = await request<{ success: boolean; data: UserProfile }>({
+    url: '/profile',
+    method: 'PUT',
+    data: { height },
+  });
+  return res.data || { height };
 }
 
 // 工具：获取今日日期字符串

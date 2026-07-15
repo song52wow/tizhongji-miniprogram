@@ -50,9 +50,33 @@
       <text class="weight-suffix">kg</text>
     </view>
 
+    <view wx:if="{{bmiValue}}" class="bmi-badge {{bmiLevel}}">
+      <text class="bmi-label">BMI</text>
+      <text class="bmi-number">{{bmiValue}}</text>
+      <text class="bmi-cat">{{bmiLabel}}</text>
+    </view>
+    <text wx:elif="{{weightInput && height === null}}" class="bmi-hint">
+      设置身高后自动计算 BMI（前往「我的」）
+    </text>
+
     <text wx:if="{{existingRecord}}" class="existing-hint">
       已有记录，保存将覆盖{{selectedPeriod === 'morning' ? '早晨锚点' : '晚间回声'}}。
     </text>
+
+    <view class="field">
+      <text class="field-label">体脂率（可选）</text>
+      <view class="field-box bodyfat-box">
+        <input
+          class="bodyfat-input"
+          type="digit"
+          placeholder="如 22.5"
+          value="{{bodyFatInput}}"
+          bindinput="onBodyFatInput"
+          confirm-type="done"
+        />
+        <text class="bodyfat-suffix">%</text>
+      </view>
+    </view>
 
     <view class="field">
       <text class="field-label">备注</text>

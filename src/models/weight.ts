@@ -6,6 +6,7 @@ export interface WeightRecord {
   date: string;
   period: WeightPeriod;
   weight: number;
+  bodyFat?: number;
   note?: string;
   createdAt: string;
   updatedAt: string;
@@ -24,4 +25,8 @@ export interface WeightStats {
 export interface ApiResponse<T> {
   items: T[];
   total: number;
+}
+
+export interface UserProfile {
+  height: number | null;
 }

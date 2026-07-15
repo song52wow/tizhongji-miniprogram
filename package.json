@@ -6,7 +6,8 @@
     "build:ts": "tsc",
     "dev": "npm run build && mp dev",
     "build": "npm run build:ts && mp build",
-    "wechat": "npm run build"
+    "wechat": "npm run build",
+    "test": "npm run build:ts && node --test tests/*.test.js"
   },
   "devDependencies": {
     "miniprogram-build": "^7.0.3",

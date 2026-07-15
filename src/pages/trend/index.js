@@ -10,6 +10,7 @@ Page({
         chartReady: false,
         morningData: [],
         eveningData: [],
+        hasBodyFat: false,
         // 统计数据
         avgMorningWeight: '--',
         avgEveningWeight: '--',
@@ -52,6 +53,17 @@ Page({
             const eveningData = eveningRecs.map((r) => r.weight);
             // 建立统一日期轴
             const allDates = [...new Set(records.map((r) => r.date))].sort();
+            // 体脂率：每个日期取一条（优先早晨，其次晚间），构建对齐序列
+            const bodyFatByDate = new Map();
+            for (const r of records) {
+                if (r.bodyFat === undefined || r.bodyFat === null)
+                    continue;
+                if (r.period === 'morning' || !bodyFatByDate.has(r.date)) {
+                    bodyFatByDate.set(r.date, r.bodyFat);
+                }
+            }
+            const alignedBodyFat = allDates.map((d) => bodyFatByDate.has(d) ? bodyFatByDate.get(d) : null);
+            const hasBodyFat = alignedBodyFat.some((v) => v !== null);
             // 统计卡片数据
             const fmt = (v) => v != null ? v.toFixed(1) : '--';
             const changeStr = stats.change != null
@@ -81,10 +93,14 @@ Page({
                 maxWeightDate: maxRec ? this.formatDateLabel(maxRec.date) : '',
                 avgWeightDiff: fmt(stats.avgWeightDiff),
                 avgDiffSubtext: stats.avgWeightDiff != null ? '处于健康波动范围内' : '暂无对比数据',
+                hasBodyFat,
             });
             // 渲染图表
             setTimeout(() => {
                 this.drawTrendChart(morningData, eveningData, morningRecs, eveningRecs, allDates);
+                if (hasBodyFat) {
+                    this.drawBodyFatChart(alignedBodyFat, allDates);
+                }
             }, 100);
         }
         catch (e) {
@@ -254,5 +270,95 @@ Page({
     },
     onChartTouch() {
         // 触摸图表时可以添加交互
+    },
+    drawBodyFatChart(alignedBodyFat, allDates) {
+        const values = alignedBodyFat.filter((v) => v !== null);
+        if (values.length === 0) {
+            return;
+        }
+        const query = wx.createSelectorQuery();
+        query.select('.bodyfat-chart').node((res) => {
+            if (!res || !res.node)
+                return;
+            const canvas = res.node;
+            const ctx = canvas.getContext('2d');
+            const dpr = wx.getSystemInfoSync().pixelRatio;
+            const width = 320;
+            const height = 178;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+            const minVal = Math.min(...values) - 1;
+            const maxVal = Math.max(...values) + 1;
+            const range = maxVal - minVal || 1;
+            const padding = 8;
+            const labelW = 30;
+            const chartW = width - padding - labelW;
+            const chartH = height - 32;
+            const chartX = padding + labelW;
+            const chartY = 10;
+            const n = allDates.length;
+            // 网格与 Y 轴标签
+            const gridCount = 4;
+            ctx.font = '10px sans-serif';
+            ctx.fillStyle = '#5F6871';
+            for (let g = 0; g <= gridCount; g++) {
+                const y = chartY + chartH - (g / gridCount) * chartH;
+                const val = minVal + (g / gridCount) * range;
+                ctx.beginPath();
+                ctx.setLineDash([3, 3]);
+                ctx.strokeStyle = '#DCE5DC';
+                ctx.lineWidth = 1;
+                ctx.moveTo(chartX, y);
+                ctx.lineTo(chartX + chartW, y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillText(val.toFixed(1), padding, y + 3);
+            }
+            ctx.fillStyle = '#5F6871';
+            ctx.font = '9px sans-serif';
+            ctx.fillText('%', padding, chartY + 10);
+            const getY = (v) => chartY + chartH - ((v - minVal) / range) * chartH;
+            const getXAligned = (i) => chartX + (n <= 1 ? chartW / 2 : (i / (n - 1)) * chartW);
+            const points = [];
+            for (let i = 0; i < alignedBodyFat.length; i++) {
+                if (alignedBodyFat[i] !== null) {
+                    points.push({ x: getXAligned(i), y: getY(alignedBodyFat[i]) });
+                }
+            }
+            if (points.length === 0)
+                return;
+            const color = '#0EA5A5';
+            // 区域填充
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, chartY + chartH);
+            for (const p of points)
+                ctx.lineTo(p.x, p.y);
+            ctx.lineTo(points[points.length - 1].x, chartY + chartH);
+            ctx.closePath();
+            ctx.fillStyle = color + '14';
+            ctx.fill();
+            // 折线
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (let i = 1; i < points.length; i++)
+                ctx.lineTo(points[i].x, points[i].y);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+            // 数据点
+            for (const p of points) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }).exec();
     },
 });

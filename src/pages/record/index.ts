@@ -1,4 +1,5 @@
-import { getWeightRecords, createWeightRecord } from '../../services/api';
+import { getWeightRecords, createWeightRecord, getProfile } from '../../services/api';
+import { calcBmi, bmiCategory } from '../../utils/bmi';
 
 interface RecordPageData {
   loading: boolean;
@@ -9,8 +10,13 @@ interface RecordPageData {
   maxDate: string;
   selectedPeriod: 'morning' | 'evening';
   weightInput: string;
+  bodyFatInput: string;
   noteInput: string;
   existingRecord: any;
+  height: number | null;
+  bmiValue: string;
+  bmiLabel: string;
+  bmiLevel: string;
 }
 
 Page({
@@ -23,8 +29,13 @@ Page({
     maxDate: '',
     selectedPeriod: 'morning' as 'morning' | 'evening',
     weightInput: '',
+    bodyFatInput: '',
     noteInput: '',
     existingRecord: null as any,
+    height: null as number | null,
+    bmiValue: '',
+    bmiLabel: '',
+    bmiLevel: '',
   } as RecordPageData,
 
   onLoad(options: any) {
@@ -51,11 +62,51 @@ Page({
       maxDate: this.formatDateForApi(new Date()),
       selectedPeriod,
     });
+    this.loadHeight();
     this.loadExistingRecord();
   },
 
   onShow() {
+    this.loadHeight();
     this.loadExistingRecord();
+  },
+
+  loadHeight() {
+    // 优先读本地缓存，命中即用；否则回落到接口。
+    const cached = wx.getStorageSync('userHeight');
+    if (typeof cached === 'number' && cached > 0) {
+      this.setData({ height: cached });
+      this.updateBmi();
+    }
+    getProfile()
+      .then((profile) => {
+        const height = profile.height;
+        if (height !== null && height !== undefined) {
+          wx.setStorageSync('userHeight', height);
+          this.setData({ height });
+        } else {
+          this.setData({ height: null });
+        }
+        this.updateBmi();
+      })
+      .catch((e) => {
+        console.error('loadHeight error:', e);
+      });
+  },
+
+  updateBmi() {
+    const weight = parseFloat(this.data.weightInput);
+    const bmi = calcBmi(weight, this.data.height);
+    if (bmi === null) {
+      this.setData({ bmiValue: '', bmiLabel: '', bmiLevel: '' });
+      return;
+    }
+    const category = bmiCategory(bmi);
+    this.setData({
+      bmiValue: bmi.toFixed(1),
+      bmiLabel: category ? category.label : '',
+      bmiLevel: category ? category.level : '',
+    });
   },
 
   formatDateForApi(date: Date): string {
@@ -80,16 +131,20 @@ Page({
           loading: false,
           existingRecord: rec,
           weightInput: rec.weight.toFixed(1),
+          bodyFatInput: rec.bodyFat !== undefined && rec.bodyFat !== null ? String(rec.bodyFat) : '',
           noteInput: rec.note || '',
           selectedPeriod: rec.period,
         });
+        this.updateBmi();
       } else {
         this.setData({
           loading: false,
           existingRecord: null,
           weightInput: '',
+          bodyFatInput: '',
           noteInput: '',
         });
+        this.updateBmi();
       }
     } catch (e: any) {
       console.error('loadExistingRecord error:', e);
@@ -106,8 +161,10 @@ Page({
       dateDisplay: `${d}/${m}/${y}`,
       existingRecord: null,
       weightInput: '',
+      bodyFatInput: '',
       noteInput: '',
     });
+    this.updateBmi();
     this.loadExistingRecord();
   },
 
@@ -119,9 +176,11 @@ Page({
       selectedPeriod: period,
       existingRecord: null,
       weightInput: '',
+      bodyFatInput: '',
       noteInput: '',
       loading: true,
     });
+    this.updateBmi();
     this.loadExistingRecord();
   },
 
@@ -136,6 +195,18 @@ Page({
       }
     }
     this.setData({ weightInput: value });
+    this.updateBmi();
+  },
+
+  onBodyFatInput(e: any) {
+    let value = e.detail.value;
+    if (value.includes('.')) {
+      const parts = value.split('.');
+      if (parts[1].length > 1) {
+        value = parts[0] + '.' + parts[1].slice(0, 1);
+      }
+    }
+    this.setData({ bodyFatInput: value });
   },
 
   onNoteInput(e: any) {
@@ -145,7 +216,7 @@ Page({
   async onSaveTap() {
     if (this.data.saving) return;
 
-    const { weightInput, noteInput, selectedDate, selectedPeriod } = this.data;
+    const { weightInput, bodyFatInput, noteInput, selectedDate, selectedPeriod } = this.data;
 
     // 校验
     const trimmedWeight = weightInput.trim();
@@ -171,6 +242,21 @@ Page({
       return;
     }
 
+    // 体脂率（可选）
+    const trimmedBodyFat = bodyFatInput.trim();
+    let bodyFat: number | undefined = undefined;
+    if (trimmedBodyFat) {
+      if (!/^\d{1,2}(\.\d)?$/.test(trimmedBodyFat)) {
+        this.setData({ errorMsg: '体脂率格式不正确，请输入如 22.5 的格式' });
+        return;
+      }
+      bodyFat = parseFloat(trimmedBodyFat);
+      if (isNaN(bodyFat) || !isFinite(bodyFat) || bodyFat <= 0 || bodyFat > 75) {
+        this.setData({ errorMsg: '体脂率需在 0~75% 范围内' });
+        return;
+      }
+    }
+
     if (noteInput.length > 200) {
       this.setData({ errorMsg: '备注最多200字符' });
       return;
@@ -183,6 +269,7 @@ Page({
         date: selectedDate,
         period: selectedPeriod,
         weight: weight,
+        bodyFat: bodyFat,
         note: noteInput.trim() || undefined,
       });
 

@@ -4,6 +4,8 @@ exports.getWeightRecords = getWeightRecords;
 exports.createWeightRecord = createWeightRecord;
 exports.getWeightStats = getWeightStats;
 exports.deleteWeightRecord = deleteWeightRecord;
+exports.getProfile = getProfile;
+exports.updateProfile = updateProfile;
 exports.getToday = getToday;
 exports.getDaysAgo = getDaysAgo;
 const date_1 = require("../utils/date");
@@ -63,7 +65,7 @@ async function createWeightRecord(params) {
     const data = await request({
         url: '/weight-records',
         method: 'POST',
-        data: Object.assign({ date: params.date, period: params.period, weight: params.weight }, (params.note ? { note: params.note } : {})),
+        data: Object.assign(Object.assign({ date: params.date, period: params.period, weight: params.weight }, (params.bodyFat !== undefined && params.bodyFat !== null ? { bodyFat: params.bodyFat } : {})), (params.note ? { note: params.note } : {})),
     });
     return data;
 }
@@ -85,6 +87,22 @@ async function deleteWeightRecord(id) {
         url: `/weight-records/${id}`,
         method: 'DELETE',
     });
+}
+// 获取用户资料（身高）
+async function getProfile() {
+    const res = await request({
+        url: '/profile',
+    });
+    return res.data || { height: null };
+}
+// 更新用户资料（身高）
+async function updateProfile(height) {
+    const res = await request({
+        url: '/profile',
+        method: 'PUT',
+        data: { height },
+    });
+    return res.data || { height };
 }
 // 工具：获取今日日期字符串
 function getToday() {

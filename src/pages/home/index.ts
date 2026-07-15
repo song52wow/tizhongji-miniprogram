@@ -1,4 +1,5 @@
-import { getWeightRecords } from '../../services/api';
+import { getWeightRecords, getProfile } from '../../services/api';
+import { calcBmi, bmiCategory } from '../../utils/bmi';
 
 Page({
   data: {
@@ -8,10 +9,17 @@ Page({
     morningWeight: null as number | null,
     morningTime: '--:--',
     morningChange: '暂无对比数据',
+    morningBodyFat: null as number | null,
 
     eveningWeight: null as number | null,
     eveningTime: '--:--',
     eveningChange: '暂无对比数据',
+    eveningBodyFat: null as number | null,
+
+    height: null as number | null,
+    bmiValue: '',
+    bmiLabel: '',
+    bmiLevel: '',
 
     chartReady: false,
     dateRangeStart: '',
@@ -31,6 +39,7 @@ Page({
 
   async loadData() {
     this.setData({ loading: true });
+    this.loadHeight();
 
     const today = this.getTodayStr();
     const weekAgo = this.getDaysAgoStr(6);
@@ -84,11 +93,14 @@ Page({
         morningWeight: morningRec?.weight ?? null,
         morningTime: morningRec ? this.formatTime(new Date(morningRec.createdAt)) : '--:--',
         morningChange: morningChangeText,
+        morningBodyFat: morningRec?.bodyFat ?? null,
         eveningWeight: eveningRec?.weight ?? null,
         eveningTime: eveningRec ? this.formatTime(new Date(eveningRec.createdAt)) : '--:--',
         eveningChange: eveningChangeText,
+        eveningBodyFat: eveningRec?.bodyFat ?? null,
         dateRangeStart: `${weekAgoDate.getMonth() + 1}/${weekAgoDate.getDate()}`,
       });
+      this.updateBmi();
 
       // 提取早晨和晚间数据，保留日期信息用于统一日期轴对齐
       const morningRecs = records
@@ -120,6 +132,48 @@ Page({
   getTodayStr(): string {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  },
+
+  loadHeight() {
+    const cached = wx.getStorageSync('userHeight');
+    if (typeof cached === 'number' && cached > 0) {
+      this.setData({ height: cached });
+      this.updateBmi();
+    }
+    getProfile()
+      .then((profile) => {
+        const height = profile.height;
+        if (height !== null && height !== undefined) {
+          wx.setStorageSync('userHeight', height);
+          this.setData({ height });
+        } else {
+          this.setData({ height: null });
+        }
+        this.updateBmi();
+      })
+      .catch((e) => {
+        console.error('loadHeight error:', e);
+      });
+  },
+
+  updateBmi() {
+    // 以最新记录计算 BMI：优先晚间，其次早晨。
+    const weight = this.data.eveningWeight ?? this.data.morningWeight;
+    if (weight === null || weight === undefined) {
+      this.setData({ bmiValue: '', bmiLabel: '', bmiLevel: '' });
+      return;
+    }
+    const bmi = calcBmi(weight, this.data.height);
+    if (bmi === null) {
+      this.setData({ bmiValue: '', bmiLabel: '', bmiLevel: '' });
+      return;
+    }
+    const category = bmiCategory(bmi);
+    this.setData({
+      bmiValue: bmi.toFixed(1),
+      bmiLabel: category ? category.label : '',
+      bmiLevel: category ? category.level : '',
+    });
   },
 
   getDaysAgoStr(n: number): string {
@@ -251,6 +305,12 @@ Page({
   onAddTap() {
     wx.navigateTo({
       url: '/pages/record/index',
+    });
+  },
+
+  onProfileTap() {
+    wx.switchTab({
+      url: '/pages/profile/index',
     });
   },
 

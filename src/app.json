@@ -3,7 +3,8 @@
     "pages/home/index",
     "pages/record/index",
     "pages/history/index",
-    "pages/trend/index"
+    "pages/trend/index",
+    "pages/profile/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -41,6 +42,12 @@
         "text": "动态",
         "iconPath": "images/history.png",
         "selectedIconPath": "images/history-selected.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "images/profile.png",
+        "selectedIconPath": "images/profile-selected.png"
       }
     ]
   },

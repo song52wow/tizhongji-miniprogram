@@ -1,0 +1,48 @@
+<view class="page">
+  <view class="mini-kicker">
+    <text>My Profile</text>
+    <text>v2</text>
+  </view>
+
+  <text class="page-title">我的资料</text>
+  <text class="page-subtitle">设置身高后，系统会在记录和趋势中自动计算 BMI。</text>
+
+  <view class="stack">
+    <view class="field">
+      <text class="field-label">身高</text>
+      <view class="height-console">
+        <input
+          class="height-input"
+          type="digit"
+          placeholder="175"
+          value="{{heightInput}}"
+          bindinput="onHeightInput"
+          confirm-type="done"
+        />
+        <text class="height-suffix">cm</text>
+      </view>
+    </view>
+
+    <text wx:if="{{savedHeight !== null}}" class="existing-hint">
+      当前已保存身高 {{savedHeight}} cm。
+    </text>
+    <text wx:else class="existing-hint">
+      尚未设置身高，设置后即可查看 BMI。
+    </text>
+
+    <text wx:if="{{errorMsg}}" class="error-msg">{{errorMsg}}</text>
+
+    <view class="save-btn {{saving ? 'saving' : ''}}" bindtap="onSaveTap">
+      <view wx:if="{{saving}}" class="save-loading"></view>
+      <text>{{saving ? '保存中...' : '保存身高'}}</text>
+    </view>
+
+    <view class="bmi-legend">
+      <text class="legend-title">BMI 健康分级（中国标准）</text>
+      <view class="legend-row"><text class="dot underweight"></text><text>偏瘦　< 18.5</text></view>
+      <view class="legend-row"><text class="dot normal"></text><text>正常　18.5 – 23.9</text></view>
+      <view class="legend-row"><text class="dot overweight"></text><text>超重　24 – 27.9</text></view>
+      <view class="legend-row"><text class="dot obese"></text><text>肥胖　≥ 28</text></view>
+    </view>
+  </view>
+</view>

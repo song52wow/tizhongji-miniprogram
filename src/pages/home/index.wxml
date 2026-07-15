@@ -18,6 +18,25 @@
         <text class="weight-unit">kg</text>
       </view>
       <text class="delta">{{morningChange}}</text>
+      <text wx:if="{{morningBodyFat !== null}}" class="micro bodyfat-line">体脂 {{morningBodyFat}}%</text>
+    </view>
+
+    <view wx:if="{{bmiValue}}" class="rhythm-card bmi-card {{bmiLevel}}">
+      <view class="card-top">
+        <text class="card-title">BMI</text>
+        <text class="bmi-cat {{bmiLevel}}">{{bmiLabel}}</text>
+      </view>
+      <view class="weight-readout">
+        <text class="weight-number">{{bmiValue}}</text>
+      </view>
+      <text class="micro">基于最新体重与身高计算</text>
+    </view>
+    <view wx:elif="{{(morningWeight !== null || eveningWeight !== null) && height === null}}" class="rhythm-card bmi-card" bindtap="onProfileTap">
+      <view class="card-top">
+        <text class="card-title">BMI</text>
+        <text class="micro">去设置</text>
+      </view>
+      <text class="micro">设置身高后自动计算 BMI</text>
     </view>
 
     <view class="time-rail">
@@ -36,6 +55,7 @@
         <text class="weight-unit">kg</text>
       </view>
       <text class="micro">{{eveningWeight !== null ? eveningChange : '记录后计算 evening - morning'}}</text>
+      <text wx:if="{{eveningBodyFat !== null}}" class="micro bodyfat-line">体脂 {{eveningBodyFat}}%</text>
     </view>
 
     <view class="rhythm-card chart-card" bindtap="onChartLongPress">

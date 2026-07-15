@@ -38,6 +38,19 @@
       </view>
     </view>
 
+    <view wx:if="{{hasBodyFat}}" class="rhythm-card chart-card">
+      <view class="card-top">
+        <text class="card-title">体脂率走势</text>
+        <view class="legend">
+          <text class="legend-dot bodyfat"></text>
+          <text>体脂 %</text>
+        </view>
+      </view>
+      <view class="chart-body">
+        <canvas canvas-id="bodyFatChart" type="2d" class="bodyfat-chart" bindtouchend="onChartTouch"></canvas>
+      </view>
+    </view>
+
     <view class="stat-grid">
       <view class="stat-card">
         <text class="stat-label">平均早体重</text>

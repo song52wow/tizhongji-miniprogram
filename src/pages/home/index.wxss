@@ -213,3 +213,39 @@ page {
   font-size: 30px;
   font-weight: 800;
 }
+
+/* BMI 卡片 */
+.card-title {
+  color: #172026;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.bodyfat-line {
+  display: block;
+  margin-top: 6px;
+  color: #6D5DFC;
+  font-weight: 800;
+}
+
+.bmi-card {
+  border-left: 4px solid #DCE5DC;
+}
+
+.bmi-card.underweight { border-left-color: #3D9BFF; }
+.bmi-card.normal { border-left-color: #16A34A; }
+.bmi-card.overweight { border-left-color: #FF8A3D; }
+.bmi-card.obese { border-left-color: #D64253; }
+
+.bmi-cat {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.bmi-cat.underweight { background: #3D9BFF; }
+.bmi-cat.normal { background: #16A34A; }
+.bmi-cat.overweight { background: #FF8A3D; }
+.bmi-cat.obese { background: #D64253; }

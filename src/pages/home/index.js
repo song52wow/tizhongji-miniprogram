@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = require("../../services/api");
+const bmi_1 = require("../../utils/bmi");
 Page({
     data: {
         loading: false,
@@ -8,9 +9,15 @@ Page({
         morningWeight: null,
         morningTime: '--:--',
         morningChange: '暂无对比数据',
+        morningBodyFat: null,
         eveningWeight: null,
         eveningTime: '--:--',
         eveningChange: '暂无对比数据',
+        eveningBodyFat: null,
+        height: null,
+        bmiValue: '',
+        bmiLabel: '',
+        bmiLevel: '',
         chartReady: false,
         dateRangeStart: '',
         chartLineData: [],
@@ -25,8 +32,9 @@ Page({
         this.loadData();
     },
     async loadData() {
-        var _a, _b;
+        var _a, _b, _c, _d;
         this.setData({ loading: true });
+        this.loadHeight();
         const today = this.getTodayStr();
         const weekAgo = this.getDaysAgoStr(6);
         // 设置日期标签
@@ -70,11 +78,14 @@ Page({
                 morningWeight: (_a = morningRec === null || morningRec === void 0 ? void 0 : morningRec.weight) !== null && _a !== void 0 ? _a : null,
                 morningTime: morningRec ? this.formatTime(new Date(morningRec.createdAt)) : '--:--',
                 morningChange: morningChangeText,
-                eveningWeight: (_b = eveningRec === null || eveningRec === void 0 ? void 0 : eveningRec.weight) !== null && _b !== void 0 ? _b : null,
+                morningBodyFat: (_b = morningRec === null || morningRec === void 0 ? void 0 : morningRec.bodyFat) !== null && _b !== void 0 ? _b : null,
+                eveningWeight: (_c = eveningRec === null || eveningRec === void 0 ? void 0 : eveningRec.weight) !== null && _c !== void 0 ? _c : null,
                 eveningTime: eveningRec ? this.formatTime(new Date(eveningRec.createdAt)) : '--:--',
                 eveningChange: eveningChangeText,
+                eveningBodyFat: (_d = eveningRec === null || eveningRec === void 0 ? void 0 : eveningRec.bodyFat) !== null && _d !== void 0 ? _d : null,
                 dateRangeStart: `${weekAgoDate.getMonth() + 1}/${weekAgoDate.getDate()}`,
             });
+            this.updateBmi();
             // 提取早晨和晚间数据，保留日期信息用于统一日期轴对齐
             const morningRecs = records
                 .filter((r) => r.period === 'morning')
@@ -100,6 +111,48 @@ Page({
     getTodayStr() {
         const d = new Date();
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    loadHeight() {
+        const cached = wx.getStorageSync('userHeight');
+        if (typeof cached === 'number' && cached > 0) {
+            this.setData({ height: cached });
+            this.updateBmi();
+        }
+        (0, api_1.getProfile)()
+            .then((profile) => {
+            const height = profile.height;
+            if (height !== null && height !== undefined) {
+                wx.setStorageSync('userHeight', height);
+                this.setData({ height });
+            }
+            else {
+                this.setData({ height: null });
+            }
+            this.updateBmi();
+        })
+            .catch((e) => {
+            console.error('loadHeight error:', e);
+        });
+    },
+    updateBmi() {
+        var _a;
+        // 以最新记录计算 BMI：优先晚间，其次早晨。
+        const weight = (_a = this.data.eveningWeight) !== null && _a !== void 0 ? _a : this.data.morningWeight;
+        if (weight === null || weight === undefined) {
+            this.setData({ bmiValue: '', bmiLabel: '', bmiLevel: '' });
+            return;
+        }
+        const bmi = (0, bmi_1.calcBmi)(weight, this.data.height);
+        if (bmi === null) {
+            this.setData({ bmiValue: '', bmiLabel: '', bmiLevel: '' });
+            return;
+        }
+        const category = (0, bmi_1.bmiCategory)(bmi);
+        this.setData({
+            bmiValue: bmi.toFixed(1),
+            bmiLabel: category ? category.label : '',
+            bmiLevel: category ? category.level : '',
+        });
     },
     getDaysAgoStr(n) {
         const d = new Date();
@@ -206,6 +259,11 @@ Page({
     onAddTap() {
         wx.navigateTo({
             url: '/pages/record/index',
+        });
+    },
+    onProfileTap() {
+        wx.switchTab({
+            url: '/pages/profile/index',
         });
     },
     onChartLongPress() {
