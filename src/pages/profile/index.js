@@ -8,6 +8,13 @@ Page({
         errorMsg: '',
         heightInput: '',
         savedHeight: null,
+        // 符号放在 JS 里，避免 WXML 源码出现裸 '<' 报错，且渲染为半角，与 '≥' 宽度一致
+        bmiLevels: [
+            { cls: 'underweight', label: '偏瘦', range: '< 18.5' },
+            { cls: 'normal', label: '正常', range: '18.5 – 23.9' },
+            { cls: 'overweight', label: '超重', range: '24 – 27.9' },
+            { cls: 'obese', label: '肥胖', range: '≥ 28' },
+        ],
     },
     onShow() {
         this.loadProfile();

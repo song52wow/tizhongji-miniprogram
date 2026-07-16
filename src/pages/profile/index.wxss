@@ -157,6 +157,14 @@ page {
   font-size: 14px;
 }
 
+.legend-label {
+  min-width: 32px;
+}
+
+.legend-range {
+  color: #5F6871;
+}
+
 .dot {
   width: 12px;
   height: 12px;

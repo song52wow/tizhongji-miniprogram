@@ -39,10 +39,11 @@
 
     <view class="bmi-legend">
       <text class="legend-title">BMI 健康分级（中国标准）</text>
-      <view class="legend-row"><text class="dot underweight"></text><text>偏瘦　＜ 18.5</text></view>
-      <view class="legend-row"><text class="dot normal"></text><text>正常　18.5 – 23.9</text></view>
-      <view class="legend-row"><text class="dot overweight"></text><text>超重　24 – 27.9</text></view>
-      <view class="legend-row"><text class="dot obese"></text><text>肥胖　≥ 28</text></view>
+      <view wx:for="{{bmiLevels}}" wx:key="cls" class="legend-row">
+        <text class="dot {{item.cls}}"></text>
+        <text class="legend-label">{{item.label}}</text>
+        <text class="legend-range">{{item.range}}</text>
+      </view>
     </view>
   </view>
 </view>
