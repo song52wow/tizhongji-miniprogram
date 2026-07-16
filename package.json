@@ -1,6 +1,6 @@
 {
   "name": "tizhongji-miniprogram",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "体重管理微信小程序",
   "scripts": {
     "build:ts": "tsc",
